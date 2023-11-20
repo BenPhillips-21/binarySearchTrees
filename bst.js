@@ -193,30 +193,32 @@ function postorder(node, listNodeCallback) {
   }
 }
 
-function height(node) {
-  console.log("bello")
-}
-
 let result = buildTree(array);
 prettyPrint(result);
 
-let preorderResult = preorder(result, listNodeCallback)
-console.log(preorderResult);
 
-let chungus = listNodeCallback()
-chungus.empty()
 
-let inorderResult = inorder(result, listNodeCallback)
-console.log(inorderResult);
-chungus.empty()
+// let preorderResult = preorder(result, listNodeCallback)
+// console.log('Preorder traversal:')
+// console.log(preorderResult);
 
-let postorderResult = postorder(result, listNodeCallback);
-console.log(postorderResult);
-chungus.empty()
+// let chungus = listNodeCallback()
+// chungus.empty()
 
-let levelOrderResult = levelOrder(createQueue, result, listNodeCallback);
-console.log(levelOrderResult);
-chungus.empty()
+// let inorderResult = inorder(result, listNodeCallback)
+// console.log("Inorder traversal:");
+// console.log(inorderResult);
+// chungus.empty()
+
+// let postorderResult = postorder(result, listNodeCallback);
+// console.log("Postorder traversal:");
+// console.log(postorderResult);
+// chungus.empty()
+
+// let levelOrderResult = levelOrder(createQueue, result, listNodeCallback);
+// console.log("Levelorder traversal:");
+// console.log(levelOrderResult);
+// chungus.empty()
 
 // const foundNode = find(9, result)
 // if (foundNode !== null) {
@@ -231,4 +233,30 @@ chungus.empty()
 // let newerTree = deleteNode(3, array);
 // prettyPrint(newerTree);
 
+
+
+function heightLeft(leNode, currentHeight = 0) {
+  if (leNode.left === null && leNode.right === null) {
+    console.log("this is a leaf node");
+    return currentHeight;
+  } 
+  let leftHeight = heightLeft(leNode.left, (currentHeight += 1));
+  return leftHeight
+}
+
+function heightRight(leNode, currentHeight = 0) {
+    if (leNode.left === null && leNode.right === null) {
+      console.log("this is a leaf node");
+      return currentHeight;
+    }
+    let rightHeight = heightRight(leNode.right, (currentHeight += 1));
+    return rightHeight;
+}
+
+let leNode = find(5, result);
+let leftHeightResult = heightLeft(leNode);
+
+let rightHeightResult = heightRight(leNode);
+
+console.log(Math.max(leftHeightResult, rightHeightResult) + 1);
 
