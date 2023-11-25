@@ -1,4 +1,4 @@
-const array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const node = (value, leftChild = null, rightChild = null) => {
   return {
@@ -209,46 +209,35 @@ function height(leNode, side = "left", currentHeight = 0) {
   return childHeight;
 }
 
+function depth(givenNode, rootNode, isLeft = true, currentDepth = 0) {
+  if (givenNode.value === rootNode.value) {
+    return currentDepth;
+  }
+  let rightDepth = 0;
+  let leftDepth = 0;
+  if (rootNode.right !== null) {
+    rightDepth = depth(givenNode, rootNode.right, false, currentDepth + 1);
+  }
+  if (rootNode.left !== null) {
+    leftDepth = depth(givenNode, rootNode.left, true, currentDepth + 1);
+  }
+  return Math.max(leftDepth, rightDepth);
+}
+
 let result = buildTree(array);
 prettyPrint(result);
 
-// let leNode = find(2, result);
+// let leNode = find(11, result);
 // let leftHeightResult = height(leNode, "left");
 // let rightHeightResult = height(leNode, "right");
 
 // console.log(Math.max(leftHeightResult, rightHeightResult) + 1);
 
-function depth(givenNode, rootNode, side = "left", currentDepth = 0) {
-    if (rootNode === null) {
-      return null
-    }
-    if (givenNode.value === rootNode.value) {
-      return currentDepth;
-    }
-  if (rootNode.left !== null && rootNode.left.left === null && rootNode.left.right === null) {
-    if (givenNode.value === rootNode.left.value) {
-      return currentDepth += 1;
-    }
-    return depth(givenNode, rootNode.right, side, currentDepth += 1)
-  }
-  if (rootNode.right !== null && rootNode.right.left === null && rootNode.right.right === null) {
-    if (givenNode.value === rootNode.right.value) {
-      return currentDepth += 1;
-    }
-    return depth(rootNode, rootNode.left, side, currentDepth += 1)
-  }
-  let childNode = side === "left" ?  rootNode.left : rootNode.right
-  return depth(givenNode, childNode, side, (currentDepth += 1));
-}
 
-let givenNode = find(1, result);
-let leftDepthResult = depth(givenNode, result, "left")
-let rightDepthResult = depth(givenNode, result, "right");
-if (leftDepthResult != null) {
-  console.log(leftDepthResult)
-} else {
-  console.log(rightDepthResult)
-}
+
+let givenNode = find(10, result);
+let depthResult = depth(givenNode, result);
+console.log(depthResult);
 
 
 
