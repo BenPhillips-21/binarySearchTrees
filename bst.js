@@ -193,8 +193,62 @@ function postorder(node, listNodeCallback) {
   }
 }
 
+function height(leNode, side = "left", currentHeight = 0) {
+  if (leNode === null) {
+    console.log("this is a null node");
+    return currentHeight;
+  }
+
+  if (leNode.left === null && leNode.right === null) {
+    console.log("this is a leaf node");
+    return currentHeight;
+  }
+  let childNode = side === "left" ? leNode.left : leNode.right;
+  let childHeight = height(childNode, side, (currentHeight += 1));
+
+  return childHeight;
+}
+
 let result = buildTree(array);
 prettyPrint(result);
+
+// let leNode = find(2, result);
+// let leftHeightResult = height(leNode, "left");
+// let rightHeightResult = height(leNode, "right");
+
+// console.log(Math.max(leftHeightResult, rightHeightResult) + 1);
+
+function depth(givenNode, rootNode, side = "left", currentDepth = 0) {
+    if (rootNode === null) {
+      return null
+    }
+    if (givenNode.value === rootNode.value) {
+      return currentDepth;
+    }
+  if (rootNode.left !== null && rootNode.left.left === null && rootNode.left.right === null) {
+    if (givenNode.value === rootNode.left.value) {
+      return currentDepth += 1;
+    }
+    return depth(givenNode, rootNode.right, side, currentDepth += 1)
+  }
+  if (rootNode.right !== null && rootNode.right.left === null && rootNode.right.right === null) {
+    if (givenNode.value === rootNode.right.value) {
+      return currentDepth += 1;
+    }
+    return depth(rootNode, rootNode.left, side, currentDepth += 1)
+  }
+  let childNode = side === "left" ?  rootNode.left : rootNode.right
+  return depth(givenNode, childNode, side, (currentDepth += 1));
+}
+
+let givenNode = find(1, result);
+let leftDepthResult = depth(givenNode, result, "left")
+let rightDepthResult = depth(givenNode, result, "right");
+if (leftDepthResult != null) {
+  console.log(leftDepthResult)
+} else {
+  console.log(rightDepthResult)
+}
 
 
 
@@ -234,29 +288,4 @@ prettyPrint(result);
 // prettyPrint(newerTree);
 
 
-
-function heightLeft(leNode, currentHeight = 0) {
-  if (leNode.left === null && leNode.right === null) {
-    console.log("this is a leaf node");
-    return currentHeight;
-  } 
-  let leftHeight = heightLeft(leNode.left, (currentHeight += 1));
-  return leftHeight
-}
-
-function heightRight(leNode, currentHeight = 0) {
-    if (leNode.left === null && leNode.right === null) {
-      console.log("this is a leaf node");
-      return currentHeight;
-    }
-    let rightHeight = heightRight(leNode.right, (currentHeight += 1));
-    return rightHeight;
-}
-
-let leNode = find(5, result);
-let leftHeightResult = heightLeft(leNode);
-
-let rightHeightResult = heightRight(leNode);
-
-console.log(Math.max(leftHeightResult, rightHeightResult) + 1);
 
