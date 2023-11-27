@@ -1,5 +1,20 @@
-const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+// Function to generate an array of unique random numbers less than 100
+function generateRandomArray(length) {
+  const randomArray = [];
+  const uniqueNumbers = new Set();
 
+  while (uniqueNumbers.size < length) {
+    const randomNumber = Math.floor(Math.random() * 100);
+    if (!uniqueNumbers.has(randomNumber)) {
+      uniqueNumbers.add(randomNumber);
+      randomArray.push(randomNumber);
+    }
+  }
+
+  return randomArray;
+}
+
+// Node creation functions
 const node = (value, leftChild = null, rightChild = null) => {
   return {
     value: value,
@@ -12,7 +27,9 @@ const tree = (mid, left = null, right = null) => {
   return node(mid, left, right);
 };
 
+// Function to build a binary search tree from a sorted array
 function buildTree(array, start = 0, end = array.length - 1) {
+  array.sort((a, b) => a - b);
   if (start > end) return null;
   const mid = Math.floor((start + end) / 2);
   const rootNode = tree(array[mid]);
@@ -23,12 +40,14 @@ function buildTree(array, start = 0, end = array.length - 1) {
   return rootNode;
 }
 
+// Function to insert a node into the binary search tree
 function insertNode(nodeToInsert, array) {
-  array.push(nodeToInsert)
+  array.push(nodeToInsert);
   let result = buildTree(array);
-  return result
+  return result;
 }
 
+// Function to delete a node from the binary search tree
 function deleteNode(nodeToDelete, array) {
   let index = array.indexOf(nodeToDelete);
   if (index !== -1) {
@@ -38,6 +57,7 @@ function deleteNode(nodeToDelete, array) {
   return result;
 }
 
+// Pretty print the binary search tree
 const prettyPrint = (node, prefix = "", isLeft = true) => {
   if (node === null) {
     return;
@@ -51,18 +71,18 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
+// Function to find a node in the binary search tree
 function find(nodeToFind, node, isLeft = true) {
   if (node === null) {
     return null;
   }
   if (node.value === nodeToFind) {
-    console.log('goteem')
-    return node
+    return node;
   }
   if (node.right !== null) {
     const result = find(nodeToFind, node.right, false);
     if (result !== null) {
-      return result
+      return result;
     }
   }
   if (node.left !== null) {
@@ -71,38 +91,40 @@ function find(nodeToFind, node, isLeft = true) {
       return result;
     }
   }
-  return null
-} 
+  return null;
+}
 
+// Callback object for listNode functions
 let list = [];
-
 function listNodeCallback() {
-return {
-  listNode(node) {
-  if (node !== null) {
-    list.push(node.value)
-    return (list)
-  } else {
-    return (list)
-  }
-}, empty() {
-    while (list.length > 0) {
-      list.pop(list)
-    }
-    return (list)
-  }, print () {
-    console.log(list)
-  }
-}
+  return {
+    listNode(node) {
+      if (node !== null) {
+        list.push(node.value);
+        return list;
+      } else {
+        return list;
+      }
+    },
+    empty() {
+      while (list.length > 0) {
+        list.pop(list);
+      }
+      return list;
+    },
+    print() {
+      console.log(list);
+    },
+  };
 }
 
+// Function to create a queue
 function createQueue() {
   const items = [];
   return {
     // Add an element to the queue
     enqueue(element) {
       items.push(element);
-      // console.log(items)
     },
     // Remove and return the front element from the queue
     dequeue() {
@@ -128,39 +150,48 @@ function createQueue() {
     },
     print() {
       console.log(items);
-      console.log('Printed Queue ^^^')
+      console.log("Printed Queue ^^^");
     },
   };
 }
 
+// Function for level order traversal of the binary search tree
 function levelOrder(queueFactory, node, listNode, nodeQueue, currentList = []) {
   if (nodeQueue === undefined) {
-  nodeQueue = queueFactory()
-  nodeQueue.enqueue(node)
-  return levelOrder(queueFactory, node, listNode, nodeQueue, currentList);
+    nodeQueue = queueFactory();
+    nodeQueue.enqueue(node);
+    return levelOrder(queueFactory, node, listNode, nodeQueue, currentList);
   } else {
-    let listNodeFactory = listNodeCallback()
+    let listNodeFactory = listNodeCallback();
     let currentList = listNodeFactory.listNode(node);
     nodeQueue.dequeue(node);
     nodeQueue.enqueue(node.left);
-    nodeQueue.enqueue(node.right)
+    nodeQueue.enqueue(node.right);
     while (!nodeQueue.isEmpty() && nodeQueue.front() === null) {
       nodeQueue.dequeue();
-    } if (!nodeQueue.isEmpty()) {
-      return levelOrder(queueFactory, nodeQueue.front(), listNode, nodeQueue, currentList);
+    }
+    if (!nodeQueue.isEmpty()) {
+      return levelOrder(
+        queueFactory,
+        nodeQueue.front(),
+        listNode,
+        nodeQueue,
+        currentList
+      );
     } else {
       return currentList;
-      }
     }
   }
+}
 
-function preorder(node, listNodeCallback) { 
+// Functions for different tree traversals
+function preorder(node, listNodeCallback) {
   {
-  listNodeFactory = listNodeCallback()
-  let currentList = listNodeFactory.listNode(node);
-  if (node === null) {
-    return;
-  }
+    listNodeFactory = listNodeCallback();
+    let currentList = listNodeFactory.listNode(node);
+    if (node === null) {
+      return;
+    }
     preorder(node.left, listNodeCallback);
     preorder(node.right, listNodeCallback);
     return currentList;
@@ -193,14 +224,13 @@ function postorder(node, listNodeCallback) {
   }
 }
 
+// Function to calculate the height of a node
 function height(leNode, side = "left", currentHeight = 0) {
   if (leNode === null) {
-    console.log("this is a null node");
     return currentHeight;
   }
 
   if (leNode.left === null && leNode.right === null) {
-    console.log("this is a leaf node");
     return currentHeight;
   }
   let childNode = side === "left" ? leNode.left : leNode.right;
@@ -209,6 +239,7 @@ function height(leNode, side = "left", currentHeight = 0) {
   return childHeight;
 }
 
+// Function to calculate the depth of a given node in the tree
 function depth(givenNode, rootNode, isLeft = true, currentDepth = 0) {
   if (givenNode.value === rootNode.value) {
     return currentDepth;
@@ -224,57 +255,81 @@ function depth(givenNode, rootNode, isLeft = true, currentDepth = 0) {
   return Math.max(leftDepth, rightDepth);
 }
 
-let result = buildTree(array);
+// Function to check if the tree is balanced
+function isBalanced(node, height) {
+  if (node === null) {
+    return true;
+  }
+  let leftHeight = height(node, "left");
+  let rightHeight = height(node, "right");
+  let difference = Math.abs(leftHeight - rightHeight);
+  if (difference > 1) {
+    return false;
+  }
+  let leftBalanced = isBalanced(node.left, height);
+  let rightBalanced = isBalanced(node.right, height);
+
+  return leftBalanced && rightBalanced;
+}
+
+// Generate a random array and build a binary search tree
+let randomArray = generateRandomArray(25);
+let result = buildTree(randomArray);
 prettyPrint(result);
 
-// let leNode = find(11, result);
-// let leftHeightResult = height(leNode, "left");
-// let rightHeightResult = height(leNode, "right");
+// Check if the tree is balanced
+let balancedResult = isBalanced(result, height);
+console.log('Is the tree balanced?', balancedResult);
 
-// console.log(Math.max(leftHeightResult, rightHeightResult) + 1);
+// Find and print the height of a specific node
+let nodeToFind = find(randomArray[5], result);
+let leftHeightResult = height(nodeToFind, "left");
+let rightHeightResult = height(nodeToFind, "right");
+console.log(`Height of Node ${randomArray[5]}:`, Math.max(leftHeightResult, rightHeightResult));
 
-
-
-let givenNode = find(10, result);
+// Find and print the depth of a specific node
+let givenNode = find(randomArray[2], result);
 let depthResult = depth(givenNode, result);
-console.log(depthResult);
+console.log(`Depth of Node ${randomArray[2]}:`, depthResult);
 
+// Perform different tree traversals and print the results
+let preorderResult = preorder(result, listNodeCallback);
+console.log("Preorder traversal:");
+console.log(preorderResult);
 
+let chungus = listNodeCallback();
+chungus.empty();
 
-// let preorderResult = preorder(result, listNodeCallback)
-// console.log('Preorder traversal:')
-// console.log(preorderResult);
+let inorderResult = inorder(result, listNodeCallback);
+console.log("Inorder traversal:");
+console.log(inorderResult);
+chungus.empty();
 
-// let chungus = listNodeCallback()
-// chungus.empty()
+let postorderResult = postorder(result, listNodeCallback);
+console.log("Postorder traversal:");
+console.log(postorderResult);
+chungus.empty();
 
-// let inorderResult = inorder(result, listNodeCallback)
-// console.log("Inorder traversal:");
-// console.log(inorderResult);
-// chungus.empty()
+let levelOrderResult = levelOrder(createQueue, result, listNodeCallback);
+console.log("Levelorder traversal:");
+console.log(levelOrderResult);
+chungus.empty();
 
-// let postorderResult = postorder(result, listNodeCallback);
-// console.log("Postorder traversal:");
-// console.log(postorderResult);
-// chungus.empty()
+// Find a specific node and print its information
+const foundNode = find(randomArray[7], result);
+if (foundNode !== null) {
+  console.log(`Node ${randomArray[7]} found!`, foundNode);
+} else {
+  console.log("Node not found");
+}
 
-// let levelOrderResult = levelOrder(createQueue, result, listNodeCallback);
-// console.log("Levelorder traversal:");
-// console.log(levelOrderResult);
-// chungus.empty()
+// Insert a new node into the tree and print the updated tree
+let newTree = insertNode(10, randomArray);
+console.log('New tree after adding 10:');
+prettyPrint(newTree);
 
-// const foundNode = find(9, result)
-// if (foundNode !== null) {
-// console.log(foundNode);
-// } else {
-//   console.log('Node not found')
-// }
-
-// let newTree = insertNode(10, array)
-// prettyPrint(newTree);
-
-// let newerTree = deleteNode(3, array);
-// prettyPrint(newerTree);
-
-
+// Delete a specific node from the tree and print the updated tree
+console.log(`New tree after removing ${randomArray[3]}:`);
+let newerTree = deleteNode(randomArray[3], randomArray);
+prettyPrint(newerTree);
 
